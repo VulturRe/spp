@@ -22,11 +22,12 @@ class BlankView : View("1DSPP") {
                 }
                 item("Закрыть проект").isDisable = true
                 separator()
-                item("Сохранить").isDisable = true
-                separator()
                 item("Выход").action {
                     close()
                 }
+            }
+            menu("Проект") {
+                item("Раскрой").isDisable = true
             }
         }
     }

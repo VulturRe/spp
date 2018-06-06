@@ -58,10 +58,13 @@ class MainView : View("1DSPP") {
                     }
                 }
                 separator()
-                item("Сохранить")
-                separator()
                 item("Выход").action {
                     close()
+                }
+            }
+            menu("Проект") {
+                item("Раскрой").action {
+
                 }
             }
         }

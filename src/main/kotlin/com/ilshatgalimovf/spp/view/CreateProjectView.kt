@@ -37,9 +37,12 @@ class CreateProjectView : View("Create Project - 1DSPP") {
                     isDefaultButton = true
 
                     action {
-                        mainController.createProject(model.name.value)
-                        mainController.showMainView()
-                        close()
+                        if (model.isValid) {
+                            mainController.createProject(model.name.value)
+                            close()
+                        } else {
+                            model.validate(decorateErrors = true)
+                        }
                     }
                 }
             }

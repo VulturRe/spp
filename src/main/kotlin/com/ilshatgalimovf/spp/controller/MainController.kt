@@ -34,6 +34,7 @@ internal class MainController : Controller() {
     fun createProject(name: String) {
         val project = Project(0, name)
         currentProject = projectService.save(project)
+        showMainView()
     }
 
     fun updateSheet(sheet: Sheet): Sheet {
