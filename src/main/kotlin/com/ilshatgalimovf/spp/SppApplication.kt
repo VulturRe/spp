@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 class SppApplication : App(MainView::class) {
 
     lateinit var applicationContext: ConfigurableApplicationContext
-    val mainController: MainController by inject()
+    private val mainController: MainController by inject()
 
     override fun init() {
         super.init()

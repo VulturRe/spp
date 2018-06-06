@@ -1,5 +1,6 @@
 package com.ilshatgalimovf.spp.view
 
+import com.ilshatgalimovf.spp.controller.MainController
 import com.ilshatgalimovf.spp.domain.Project
 import com.ilshatgalimovf.spp.service.ProjectService
 import javafx.beans.property.SimpleObjectProperty
@@ -9,8 +10,9 @@ import javafx.collections.ObservableList
 import javafx.geometry.Orientation
 import tornadofx.*
 
-class OpenProjectView : View("My View") {
+class OpenProjectView : View("Open Project - 1DSPP") {
 
+    private val mainController: MainController by inject()
     private val projectService: ProjectService by di()
     private var projectList: ArrayList<Project> = ArrayList()
     private var projectListAsObservable: ObservableList<Project> = FXCollections.observableArrayList()
@@ -36,6 +38,9 @@ class OpenProjectView : View("My View") {
                         field("Имя проекта:", Orientation.VERTICAL) {
                             combobox(model.name, projectListAsObservable) {
                                 prefWidth = 375.0
+                                valueProperty().onChange {
+                                    mainController.currentProject = it
+                                }
                             }
                         }
                     }
@@ -47,7 +52,7 @@ class OpenProjectView : View("My View") {
                     isDefaultButton = true
 
                     action {
-                        //                        mainController.showMainView()
+                        mainController.showMainView()
                         close()
                     }
                 }

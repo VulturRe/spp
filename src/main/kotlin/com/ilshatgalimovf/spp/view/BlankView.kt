@@ -1,11 +1,8 @@
 package com.ilshatgalimovf.spp.view
 
-import com.ilshatgalimovf.spp.controller.MainController
 import tornadofx.*
 
 class BlankView : View("1DSPP") {
-
-    private val mainController: MainController by inject()
 
     override val root = borderpane {
         prefWidth = 600.0
@@ -23,11 +20,9 @@ class BlankView : View("1DSPP") {
                         find<OpenProjectView>().openModal()
                     }
                 }
-                item("Закрыть проект").action {
-                    mainController.showBlankView()
-                }
+                item("Закрыть проект").isDisable = true
                 separator()
-                item("Сохранить")
+                item("Сохранить").isDisable = true
                 separator()
                 item("Выход").action {
                     close()
