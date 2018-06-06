@@ -32,7 +32,7 @@ class OpenProjectView : View("Open Project - 1DSPP") {
 
         form {
             hbox(20) {
-                fieldset("Новый проект", labelPosition = Orientation.VERTICAL) {
+                fieldset("Открыть проект", labelPosition = Orientation.VERTICAL) {
                     vbox {
                         field("Имя проекта:", Orientation.VERTICAL) {
                             combobox(model.name, projectListAsObservable) {
