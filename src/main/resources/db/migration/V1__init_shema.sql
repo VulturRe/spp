@@ -20,7 +20,8 @@ CREATE SEQUENCE blank_id_seq
   CACHE 1;
 
 CREATE TABLE project (
-  id BIGINT PRIMARY KEY DEFAULT nextval('project_id_seq') NOT NULL
+  id BIGINT PRIMARY KEY DEFAULT nextval('project_id_seq') NOT NULL,
+  name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE sheet (
