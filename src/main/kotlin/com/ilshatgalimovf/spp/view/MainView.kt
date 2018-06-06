@@ -1,6 +1,7 @@
 package com.ilshatgalimovf.spp.view
 
 import com.ilshatgalimovf.spp.controller.MainController
+import com.ilshatgalimovf.spp.domain.Blank
 import com.ilshatgalimovf.spp.domain.ListNode
 import com.ilshatgalimovf.spp.domain.ListNodeType
 import com.ilshatgalimovf.spp.domain.Sheet
@@ -13,6 +14,7 @@ import tornadofx.*
 class MainView : View("1DSPP") {
 
     private val mainController: MainController by inject()
+    private var selectedBlankId: Long? = null
     private var listViewObservable: ObservableList<ListNode> = FXCollections.observableArrayList()
 
     private val model = object : ViewModel() {
@@ -26,8 +28,11 @@ class MainView : View("1DSPP") {
     override fun onDock() {
         if (mainController.currentProject.sheet != null) {
             val sheet = mainController.currentProject.sheet!!
-            listViewObservableAdd(sheetToNode(sheet))
+            listViewObservableUpdate(sheetToNode(sheet))
             updateSheetModel(sheet)
+        }
+        if (mainController.currentProject.blank != null) {
+            listViewObservableAddAll(blankListToNodeList(mainController.currentProject.blank!!))
         }
     }
 
@@ -65,6 +70,9 @@ class MainView : View("1DSPP") {
             prefWidth = 200.0
             prefHeight = 400.0
             cellFormat { text = it.name + ": " + it.length + ", " + it.count }
+            setOnMouseClicked {
+                updateView(selectedItem)
+            }
         }
 
         center = anchorpane {
@@ -110,7 +118,9 @@ class MainView : View("1DSPP") {
                             }
                         }
                         buttonbar {
-                            button("Добавить")
+                            button("Применить").action {
+                                addBlank()
+                            }
                         }
                     }
                 }
@@ -123,9 +133,49 @@ class MainView : View("1DSPP") {
                 sheet.id!!,
                 "Sheet",
                 sheet.length,
+                sheet.width,
                 sheet.count,
                 ListNodeType.SHEET
         )
+    }
+
+    private fun blankToNode(blank: Blank): ListNode {
+        return ListNode(
+                blank.id!!,
+                "Blank",
+                blank.length,
+                null,
+                blank.count,
+                ListNodeType.BLANK
+        )
+    }
+
+    private fun blankListToNodeList(bl: List<Blank>): List<ListNode> {
+        val nodes = arrayListOf<ListNode>()
+        for (item in bl) {
+            nodes.add(blankToNode(item))
+        }
+        return nodes
+    }
+
+    private fun updateView(selectedItem: ListNode?) {
+        if (selectedItem == null)
+            return
+
+        selectedBlankId = if (selectedItem.type == ListNodeType.BLANK) {
+            selectedItem.id
+        } else {
+            null
+        }
+
+        if (selectedItem.type == ListNodeType.BLANK) {
+            model.blankCount.value = selectedItem.count
+            model.blankLength.value = selectedItem.length
+        } else {
+            model.sheetLength.value = selectedItem.length
+            model.sheetWidth.value = selectedItem.width
+            model.sheetCount.value = selectedItem.count
+        }
     }
 
     private fun updateSheetModel(sheet: Sheet) {
@@ -142,18 +192,30 @@ class MainView : View("1DSPP") {
                 model.sheetCount.value.toInt()
         )
         val savedSheet = mainController.updateSheet(sheet)
-        listViewObservableAdd(sheetToNode(savedSheet))
+        listViewObservableUpdate(sheetToNode(savedSheet))
     }
 
-    private fun listViewObservableAdd(node: ListNode) {
-        if (listViewObservable.size > 0) {
+    private fun addBlank() {
+        val blank = Blank(
+                selectedBlankId,
+                model.blankLength.value.toInt(),
+                model.blankCount.value.toInt(),
+                mainController.currentProject.id!!
+        )
+        val savedBlank = mainController.updateBlank(blank)
+        listViewObservableUpdate(blankToNode(savedBlank))
+    }
+
+    private fun listViewObservableUpdate(node: ListNode) {
+        if (node.type == ListNodeType.SHEET && listViewObservable.size > 0) {
             listViewObservable[0] = node
         } else {
+            listViewObservable.removeIf { it.id == node.id }
             listViewObservable.add(node)
         }
     }
 
-    fun listViewObservableAddAll(nodes: List<ListNode>) {
+    private fun listViewObservableAddAll(nodes: List<ListNode>) {
         listViewObservable.addAll(nodes)
     }
 

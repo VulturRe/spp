@@ -12,8 +12,5 @@ internal data class Blank(
 
         @Column(nullable = false) var length: Int = 1,
         @Column(nullable = false) var count: Int = 1,
-
-        @ManyToOne(fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
-        @JoinColumn(name = "project_id")
-        var project: Project? = null
+        @Column(name = "project_id", nullable = false) var projectId: Long? = null
 )

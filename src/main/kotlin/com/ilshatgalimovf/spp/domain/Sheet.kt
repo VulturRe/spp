@@ -1,6 +1,5 @@
 package com.ilshatgalimovf.spp.domain
 
-import org.springframework.lang.NonNull
 import javax.persistence.*
 
 @Entity
@@ -13,10 +12,5 @@ internal data class Sheet(
 
         @Column(nullable = false) var length: Int = 1,
         @Column(nullable = false) var width: Int = 1,
-        @Column(nullable = false) var count: Int = 1/*,
-
-        @OneToOne(fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
-        @JoinColumn(name = "project_id", nullable = false)
-        @NonNull
-        var project: Project? = null*/
+        @Column(nullable = false) var count: Int = 1
 )

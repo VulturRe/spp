@@ -16,6 +16,7 @@ internal data class Project(
         @JoinColumn(name = "sheet_id")
         var sheet: Sheet? = null,
 
-        @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
-        var blank: List<Blank>? = null
+        @OneToMany(fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
+        @JoinColumn(name = "project_id", referencedColumnName = "id")
+        var blank: MutableList<Blank>? = null
 )
