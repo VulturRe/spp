@@ -1,10 +1,3 @@
-CREATE SEQUENCE project_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
 CREATE SEQUENCE sheet_id_seq
   INCREMENT 1
   MINVALUE 1
@@ -12,7 +5,14 @@ CREATE SEQUENCE sheet_id_seq
   START 1
   CACHE 1;
 
-CREATE SEQUENCE blank_id_seq
+CREATE TABLE sheet (
+  id BIGINT PRIMARY KEY DEFAULT nextval('sheet_id_seq') NOT NULL,
+  length INT NOT NULL,
+  width INT NOT NULL,
+  count INT NOT NULL
+);
+
+CREATE SEQUENCE project_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
@@ -21,16 +21,16 @@ CREATE SEQUENCE blank_id_seq
 
 CREATE TABLE project (
   id BIGINT PRIMARY KEY DEFAULT nextval('project_id_seq') NOT NULL,
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL,
+  sheet_id BIGINT REFERENCES sheet(id)
 );
 
-CREATE TABLE sheet (
-  id BIGINT PRIMARY KEY DEFAULT nextval('sheet_id_seq') NOT NULL,
-  length INT NOT NULL,
-  width INT NOT NULL,
-  count INT NOT NULL,
-  project_id BIGINT NOT NULL REFERENCES project(id)
-);
+CREATE SEQUENCE blank_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
 
 CREATE TABLE blank (
   id BIGINT PRIMARY KEY DEFAULT nextval('blank_id_seq') NOT NULL,

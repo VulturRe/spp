@@ -4,7 +4,6 @@ import com.ilshatgalimovf.spp.controller.MainController
 import com.ilshatgalimovf.spp.domain.Project
 import com.ilshatgalimovf.spp.service.ProjectService
 import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.geometry.Orientation
@@ -38,8 +37,9 @@ class OpenProjectView : View("Open Project - 1DSPP") {
                         field("Имя проекта:", Orientation.VERTICAL) {
                             combobox(model.name, projectListAsObservable) {
                                 prefWidth = 375.0
+                                cellFormat { text = it.name }
                                 valueProperty().onChange {
-                                    mainController.currentProject = it
+                                    mainController.currentProject = it!!
                                 }
                             }
                         }

@@ -1,7 +1,9 @@
 package com.ilshatgalimovf.spp.controller
 
 import com.ilshatgalimovf.spp.domain.Project
+import com.ilshatgalimovf.spp.domain.Sheet
 import com.ilshatgalimovf.spp.service.ProjectService
+import com.ilshatgalimovf.spp.service.SheetService
 import com.ilshatgalimovf.spp.view.BlankView
 import com.ilshatgalimovf.spp.view.MainView
 import tornadofx.*
@@ -11,7 +13,8 @@ internal class MainController : Controller() {
     private val blankView: BlankView by inject()
     private val mainView: MainView by inject()
     private val projectService: ProjectService by di()
-    var currentProject: Project? = null
+    private val sheetService: SheetService by di()
+    var currentProject: Project = Project()
 
     fun init() {
         showBlankView()
@@ -26,7 +29,15 @@ internal class MainController : Controller() {
     }
 
     fun createProject(name: String) {
-        val project = Project(null, name)
-        currentProject = projectService.create(project)
+        val project = Project(0, name)
+        currentProject = projectService.save(project)
+    }
+
+    fun updateSheet(sheet: Sheet): Sheet {
+//        val newProject = Project(currentProject.id, currentProject.name, sheet, currentProject.blank)
+        val savedSheet = sheetService.save(sheet)
+        currentProject.sheet = sheet
+        currentProject = projectService.update(currentProject)
+        return savedSheet
     }
 }

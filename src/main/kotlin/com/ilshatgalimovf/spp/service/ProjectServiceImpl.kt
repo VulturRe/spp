@@ -14,7 +14,19 @@ internal class ProjectServiceImpl @Autowired constructor(private val projectRepo
     }
 
     @Transactional
-    override fun create(project: Project): Project {
+    override fun save(project: Project): Project {
+        return projectRepository.save(project)
+    }
+
+    @Transactional
+    override fun update(project: Project): Project {
+        val currentProject = projectRepository.findById(project.id!!).get()
+        /*val newProject = Project(
+                id = project.id,
+                name = project.name,
+                sheet = project.sheet ?: currentProject.sheet,
+                blank = project.blank ?: currentProject.blank
+        )*/
         return projectRepository.save(project)
     }
 }

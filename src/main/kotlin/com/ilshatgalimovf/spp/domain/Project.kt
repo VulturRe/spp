@@ -4,21 +4,18 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "project")
-internal open class Project(
+internal data class Project(
         @Id
         @SequenceGenerator(name = "project_id", sequenceName = "project_id_seq", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_id")
-        val id: Long? = null,
+        var id: Long? = null,
 
-        @Column (nullable = false) val name: String = "",
+        @Column (nullable = false) var name: String = "",
 
-        @OneToOne(mappedBy = "project", fetch = FetchType.EAGER, cascade = [(CascadeType.ALL)])
-        val sheet: Sheet? = null,
+        @OneToOne(fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
+        @JoinColumn(name = "sheet_id")
+        var sheet: Sheet? = null,
 
-        @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = [(CascadeType.ALL)])
-        val blank: List<Blank>? = null
-) {
-    override fun toString(): String {
-        return name
-    }
-}
+        @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = [(CascadeType.PERSIST), (CascadeType.REMOVE), (CascadeType.REFRESH)])
+        var blank: List<Blank>? = null
+)
