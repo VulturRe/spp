@@ -31,6 +31,11 @@ internal class MainController : Controller() {
         blankView.replaceWith(mainView, sizeToScene = true, centerOnScreen = true)
     }
 
+    fun updateCurrentProject(project: Project) {
+        currentProject = project
+        mainView.update()
+    }
+
     fun createProject(name: String) {
         val project = Project(0, name)
         currentProject = projectService.save(project)

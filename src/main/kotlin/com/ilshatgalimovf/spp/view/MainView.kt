@@ -26,14 +26,8 @@ class MainView : View("1DSPP") {
     }
 
     override fun onDock() {
-        if (mainController.currentProject.sheet != null) {
-            val sheet = mainController.currentProject.sheet!!
-            listViewObservableUpdate(sheetToNode(sheet))
-            updateSheetModel(sheet)
-        }
-        if (mainController.currentProject.blank != null) {
-            listViewObservableAddAll(blankListToNodeList(mainController.currentProject.blank!!))
-        }
+        title = mainController.currentProject.name + " - 1DSPP"
+        update()
     }
 
     override val root = borderpane {
@@ -74,7 +68,7 @@ class MainView : View("1DSPP") {
             prefHeight = 400.0
             cellFormat { text = it.name + ": " + it.length + ", " + it.count }
             setOnMouseClicked {
-                updateView(selectedItem)
+                updateViewBySelectedItem(selectedItem)
             }
         }
 
@@ -161,7 +155,21 @@ class MainView : View("1DSPP") {
         return nodes
     }
 
-    private fun updateView(selectedItem: ListNode?) {
+    fun update() {
+        clear()
+        if (mainController.currentProject.sheet != null) {
+            val sheet = mainController.currentProject.sheet!!
+            val node = sheetToNode(sheet)
+            updateSheetModel(sheet)
+            listViewObservableUpdate(node)
+        }
+        if (mainController.currentProject.blank != null && mainController.currentProject.blank?.size!! > 0) {
+            val nodes = blankListToNodeList(mainController.currentProject.blank!!)
+            listViewObservableAddAll(nodes)
+        }
+    }
+
+    private fun updateViewBySelectedItem(selectedItem: ListNode?) {
         if (selectedItem == null)
             return
 
@@ -224,5 +232,14 @@ class MainView : View("1DSPP") {
 
     fun listViewObservableClear() {
         listViewObservable.removeAll()
+    }
+
+    private fun clear() {
+        listViewObservable.clear()
+        model.blankCount.value = 0
+        model.blankLength.value = 0
+        model.sheetCount.value = 0
+        model.sheetLength.value = 0
+        model.sheetWidth.value = 0
     }
 }

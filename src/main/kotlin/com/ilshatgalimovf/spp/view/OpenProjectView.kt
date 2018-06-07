@@ -13,6 +13,7 @@ class OpenProjectView : View("Open Project - 1DSPP") {
 
     private val mainController: MainController by inject()
     private val projectService: ProjectService by di()
+    private var selectedProject: Project? = null
     private var projectList: ArrayList<Project> = ArrayList()
     private var projectListAsObservable: ObservableList<Project> = FXCollections.observableArrayList()
 
@@ -23,6 +24,7 @@ class OpenProjectView : View("Open Project - 1DSPP") {
     override fun onDock() {
         super.onDock()
         projectList = projectService.findAll() as ArrayList<Project>
+        projectListAsObservable.clear()
         projectListAsObservable.addAll(projectList)
     }
 
@@ -39,7 +41,8 @@ class OpenProjectView : View("Open Project - 1DSPP") {
                                 prefWidth = 375.0
                                 cellFormat { text = it.name }
                                 valueProperty().onChange {
-                                    mainController.currentProject = it!!
+                                    if (it != null)
+                                        selectedProject = it
                                 }
                             }
                         }
@@ -52,8 +55,12 @@ class OpenProjectView : View("Open Project - 1DSPP") {
                     isDefaultButton = true
 
                     action {
-                        mainController.showMainView()
-                        close()
+                        if (selectedProject != null) {
+                            mainController.updateCurrentProject(selectedProject!!)
+                            selectedProject = null
+                            mainController.showMainView()
+                            close()
+                        }
                     }
                 }
             }
