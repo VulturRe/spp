@@ -8,8 +8,7 @@ CREATE SEQUENCE sheet_id_seq
 CREATE TABLE sheet (
   id BIGINT PRIMARY KEY DEFAULT nextval('sheet_id_seq') NOT NULL,
   length INT NOT NULL,
-  width INT NOT NULL,
-  count INT NOT NULL
+  width INT NOT NULL
 );
 
 CREATE SEQUENCE project_id_seq

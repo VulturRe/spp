@@ -8,6 +8,7 @@ import com.ilshatgalimovf.spp.service.ProjectService
 import com.ilshatgalimovf.spp.service.SheetService
 import com.ilshatgalimovf.spp.view.BlankView
 import com.ilshatgalimovf.spp.view.MainView
+import org.springframework.transaction.annotation.Transactional
 import tornadofx.*
 
 internal class MainController : Controller() {
@@ -50,8 +51,9 @@ internal class MainController : Controller() {
     }
 
     fun updateBlank(blank: Blank): Blank {
+        val blankId = blank.id
         val savedBlank = blankService.save(blank)
-        if (blank.id == null) {
+        if (blankId == null) {
             if (currentProject.blank == null) {
                 currentProject.blank = arrayListOf(savedBlank)
             } else {

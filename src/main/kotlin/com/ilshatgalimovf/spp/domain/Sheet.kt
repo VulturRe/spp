@@ -11,6 +11,5 @@ internal data class Sheet(
         var id: Long? = null,
 
         @Column(nullable = false) var length: Int = 1,
-        @Column(nullable = false) var width: Int = 1,
-        @Column(nullable = false) var count: Int = 1
+        @Column(nullable = false) var width: Int = 1
 )

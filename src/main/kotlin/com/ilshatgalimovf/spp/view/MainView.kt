@@ -5,6 +5,7 @@ import com.ilshatgalimovf.spp.domain.Blank
 import com.ilshatgalimovf.spp.domain.ListNode
 import com.ilshatgalimovf.spp.domain.ListNodeType
 import com.ilshatgalimovf.spp.domain.Sheet
+import com.ilshatgalimovf.spp.util.Combinations
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -20,7 +21,6 @@ class MainView : View("1DSPP") {
     private val model = object : ViewModel() {
         val sheetLength = bind { SimpleIntegerProperty() }
         val sheetWidth = bind { SimpleIntegerProperty() }
-        val sheetCount = bind { SimpleIntegerProperty() }
         val blankLength = bind { SimpleIntegerProperty() }
         val blankCount = bind { SimpleIntegerProperty() }
     }
@@ -58,7 +58,7 @@ class MainView : View("1DSPP") {
             }
             menu("Проект") {
                 item("Раскрой").action {
-
+                    Combinations(3, 5)
                 }
             }
         }
@@ -66,7 +66,10 @@ class MainView : View("1DSPP") {
         left = listview(listViewObservable) {
             prefWidth = 200.0
             prefHeight = 400.0
-            cellFormat { text = it.name + ": " + it.length + ", " + it.count }
+            cellFormat {
+                val t = it.count ?: it.width
+                text = it.name + ": " + it.length + ", " + t
+            }
             setOnMouseClicked {
                 updateViewBySelectedItem(selectedItem)
             }
@@ -86,11 +89,6 @@ class MainView : View("1DSPP") {
                         }
                         field("Ширина листа", Orientation.VERTICAL) {
                             textfield(model.sheetWidth) {
-                                prefWidth = 375.0
-                            }
-                        }
-                        field("Количество", Orientation.VERTICAL) {
-                            textfield(model.sheetCount) {
                                 prefWidth = 375.0
                             }
                         }
@@ -131,7 +129,7 @@ class MainView : View("1DSPP") {
                 "Sheet",
                 sheet.length,
                 sheet.width,
-                sheet.count,
+                null,
                 ListNodeType.SHEET
         )
     }
@@ -185,22 +183,19 @@ class MainView : View("1DSPP") {
         } else {
             model.sheetLength.value = selectedItem.length
             model.sheetWidth.value = selectedItem.width
-            model.sheetCount.value = selectedItem.count
         }
     }
 
     private fun updateSheetModel(sheet: Sheet) {
         model.sheetLength.value = sheet.length
         model.sheetWidth.value = sheet.width
-        model.sheetCount.value = sheet.count
     }
 
     private fun saveSheet() {
         val sheet = Sheet(
                 mainController.currentProject.sheet?.id,
                 model.sheetLength.value.toInt(),
-                model.sheetWidth.value.toInt(),
-                model.sheetCount.value.toInt()
+                model.sheetWidth.value.toInt()
         )
         val savedSheet = mainController.updateSheet(sheet)
         listViewObservableUpdate(sheetToNode(savedSheet))
@@ -221,7 +216,7 @@ class MainView : View("1DSPP") {
         if (node.type == ListNodeType.SHEET && listViewObservable.size > 0) {
             listViewObservable[0] = node
         } else {
-            listViewObservable.removeIf { it.id == node.id }
+            listViewObservable.removeIf { it.type == node.type && it.id == node.id }
             listViewObservable.add(node)
         }
     }
@@ -238,7 +233,6 @@ class MainView : View("1DSPP") {
         listViewObservable.clear()
         model.blankCount.value = 0
         model.blankLength.value = 0
-        model.sheetCount.value = 0
         model.sheetLength.value = 0
         model.sheetWidth.value = 0
     }

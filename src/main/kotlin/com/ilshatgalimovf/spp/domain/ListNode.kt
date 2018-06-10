@@ -5,6 +5,6 @@ data class ListNode(
         val name: String,
         val length: Int,
         val width: Int?,
-        val count: Int,
+        val count: Int?,
         val type: ListNodeType
 )
